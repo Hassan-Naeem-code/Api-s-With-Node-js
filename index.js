@@ -2,22 +2,28 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
-
+const env = require("dotenv");
+env.config();
 const userRoute = require("./routes/user");
 const bookRoute = require("./routes/book");
+const authRoute = require("./routes/auth");
+const PORT = process.env.PORT;
 app.use(express.json());
 app.use(cors());
 
 app.use("/user", userRoute);
 app.use("/book", bookRoute);
+app.use('/auth',authRoute)
+
+
 
 mongoose
   .connect(
-    "mongodb+srv://Hassan:Hassan@cluster0.hpfkv.mongodb.net/Hassan?retryWrites=true&w=majority"
+   process.env.MONGODB_CONNECTION_STRING
   )
   .then(() => {
     console.log("Database is connected");
-    app.listen(5000, () => {
+    app.listen(PORT, () => {
       console.log("Server is listening on port 5000");
     });
   })
